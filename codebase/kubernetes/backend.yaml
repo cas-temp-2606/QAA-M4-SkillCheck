@@ -6,6 +6,11 @@ metadata:
     app: backend
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
   selector:
     matchLabels:
       app: backend
@@ -17,6 +22,7 @@ spec:
       containers:
         - name: backend
           image: ms11235813/m4-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
 ---
