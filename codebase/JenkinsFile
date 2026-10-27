@@ -1,8 +1,29 @@
 pipeline {
     agent any
+    environment {
+        DH_CREDS = credentials('dockerhub-credentials')
+    }
 
     stages {
-        stage('Deploy') {
+        stage('Build Images') {
+            steps {
+                dir('codebase') {
+                    sh "docker build -t ${DH_CREDS_USR}/m4-backend:latest ./backend"
+                    sh "docker build -t ${DH_CREDS_USR}/m4-frontend:latest ./frontend"
+                }
+            }
+        }
+        stage('Push Images') {
+            steps {
+                dir('codebase') {
+                    sh "docker login -u ${DH_CREDS_USR} -p ${DH_CREDS_PSW}"
+                    sh "docker push ${DH_CREDS_USR}/m4-backend:latest"
+                    sh "docker push ${DH_CREDS_USR}/m4-frontend:latest"
+                    sh "docker logout"
+                }
+            }
+        }
+        stage('Deploy with Kubernetes') {
             steps {
                 dir('codebase') {
                     sh 'sh ./k8s-deploy.sh'
