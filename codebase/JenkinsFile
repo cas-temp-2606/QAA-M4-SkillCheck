@@ -1,1 +1,28 @@
 # JenkinsFile for our CI CD Server
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Deploy') {
+            steps {
+                dir('codebase') {
+                    sh 'sh ./k8s-deploy.sh'
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo "Success"
+        }
+        failure {
+            echo "Pipeline failed"
+        }
+    }
+}
