@@ -5,3 +5,6 @@ Total project will include:
 - Finishing Dockerfiles and building Docker Images
 - Separate instance with Jenkins installed as a CI CD Server
 - Kubernetes cluster with a deployment of 2x backend pods and 2x frontend pods
+
+
+
